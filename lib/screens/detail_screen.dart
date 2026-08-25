@@ -4,7 +4,46 @@ import '../models/produto.dart';
 class DetailScreen extends StatelessWidget {
   final Produto produto;
 
-  const DetailScreen({super.key, required this.produto});
+  const DetailScreen({
+    super.key,
+    required this.produto,
+  });
+
+  Future<void> _confirmarVolta(BuildContext context) async {
+    final confirmar = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Confirmar'),
+          content: const Text(
+            'Deseja voltar e confirmar este produto?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.indigo,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Confirmar'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmar == true && context.mounted) {
+      Navigator.pop(context, 'Produto confirmado!');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +84,7 @@ class DetailScreen extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.pop(context, 'Produto confirmado!');
+                  _confirmarVolta(context);
                 },
                 icon: const Icon(Icons.check),
                 label: const Text('Voltar e Confirmar'),
