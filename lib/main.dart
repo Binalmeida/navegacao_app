@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'models/produto.dart';
 import 'screens/detail_screen.dart';
+import 'screens/add_product_screen.dart';
 
 void main() {
   runApp(const NavegacaoApp());
@@ -49,7 +50,10 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   ];
 
-  Future<void> _abrirDetalhes(BuildContext context, Produto produto) async {
+  Future<void> _abrirDetalhes(
+    BuildContext context,
+    Produto produto,
+  ) async {
     final resultado = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -67,6 +71,30 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> _abrirCadastro() async {
+    final produto = await Navigator.push<Produto>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const AddProductScreen(),
+      ),
+    );
+
+    if (produto != null && mounted) {
+      setState(() {
+        _produtos.add(produto);
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '${produto.nome} cadastrado com sucesso!',
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,25 +103,58 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.indigo,
         foregroundColor: Colors.white,
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: _abrirCadastro,
+            icon: const Icon(Icons.add),
+            tooltip: 'Adicionar produto',
+          ),
+        ],
       ),
       body: ListView.builder(
         itemCount: _produtos.length,
         itemBuilder: (ctx, index) {
           final prod = _produtos[index];
+
           return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            margin: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 6,
+            ),
             child: ListTile(
               leading: const CircleAvatar(
                 backgroundColor: Colors.indigoAccent,
-                child: Icon(Icons.shopping_bag, color: Colors.white),
+                child: Icon(
+                  Icons.shopping_bag,
+                  color: Colors.white,
+                ),
               ),
-              title: Text(prod.nome, style: const TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text('R\$ ${prod.preco.toStringAsFixed(2)}'),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: () => _abrirDetalhes(context, prod),
+              title: Text(
+                prod.nome,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: Text(
+                'R\$ ${prod.preco.toStringAsFixed(2)}',
+              ),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+              ),
+              onTap: () => _abrirDetalhes(
+                context,
+                prod,
+              ),
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _abrirCadastro,
+        backgroundColor: Colors.indigo,
+        foregroundColor: Colors.white,
+        child: const Icon(Icons.add),
       ),
     );
   }
