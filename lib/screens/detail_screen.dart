@@ -65,7 +65,9 @@ class DetailScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+
             const SizedBox(height: 10),
+
             Text(
               'R\$ ${produto.preco.toStringAsFixed(2)}',
               style: const TextStyle(
@@ -74,12 +76,18 @@ class DetailScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+
             const SizedBox(height: 20),
+
             Text(
               produto.descricao,
-              style: const TextStyle(fontSize: 16),
+              style: const TextStyle(
+                fontSize: 16,
+              ),
             ),
+
             const Spacer(),
+
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
@@ -91,7 +99,9 @@ class DetailScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.indigo,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                  ),
                 ),
               ),
             ),

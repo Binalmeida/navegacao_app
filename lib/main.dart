@@ -15,11 +15,33 @@ class NavegacaoApp extends StatelessWidget {
     return MaterialApp(
       title: 'App Navegação',
       debugShowCheckedModeBanner: false,
+
       theme: ThemeData(
         primarySwatch: Colors.indigo,
         useMaterial3: true,
       ),
+
       home: const HomeScreen(),
+
+      routes: {
+        '/cadastro': (context) => const AddProductScreen(),
+      },
+
+      onGenerateRoute: (settings) {
+        if (settings.name == '/detalhes') {
+          final produto = settings.arguments as Produto;
+
+          return MaterialPageRoute(
+            builder: (context) {
+              return DetailScreen(
+                produto: produto,
+              );
+            },
+          );
+        }
+
+        return null;
+      },
     );
   }
 }
@@ -35,17 +57,20 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Produto> _produtos = [
     Produto(
       nome: 'Notebook Pro',
-      descricao: 'Processador de última geração, 16GB RAM, SSD 512GB.',
+      descricao:
+          'Processador de última geração, 16GB RAM, SSD 512GB.',
       preco: 4500.00,
     ),
     Produto(
       nome: 'Smartphone X',
-      descricao: 'Tela AMOLED 120Hz, Câmera Tripla de 50MP.',
+      descricao:
+          'Tela AMOLED 120Hz, Câmera Tripla de 50MP.',
       preco: 2800.00,
     ),
     Produto(
       nome: 'Fone Bluetooth',
-      descricao: 'Cancelamento ativo de ruído e bateria de até 30h.',
+      descricao:
+          'Cancelamento ativo de ruído e bateria de até 30h.',
       preco: 350.00,
     ),
   ];
@@ -54,17 +79,18 @@ class _HomeScreenState extends State<HomeScreen> {
     BuildContext context,
     Produto produto,
   ) async {
-    final resultado = await Navigator.push(
+    final resultado = await Navigator.pushNamed(
       context,
-      MaterialPageRoute(
-        builder: (context) => DetailScreen(produto: produto),
-      ),
+      '/detalhes',
+      arguments: produto,
     );
 
     if (resultado != null && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Retorno da tela: $resultado'),
+          content: Text(
+            'Retorno da tela: $resultado',
+          ),
           backgroundColor: Colors.indigo,
         ),
       );
@@ -72,14 +98,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _abrirCadastro() async {
-    final produto = await Navigator.push<Produto>(
+    final produto = await Navigator.pushNamed(
       context,
-      MaterialPageRoute(
-        builder: (context) => const AddProductScreen(),
-      ),
+      '/cadastro',
     );
 
-    if (produto != null && mounted) {
+    if (produto is Produto && mounted) {
       setState(() {
         _produtos.add(produto);
       });
@@ -99,7 +123,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Catálogo de Produtos'),
+        title: const Text(
+          'Catálogo de Produtos',
+        ),
         backgroundColor: Colors.indigo,
         foregroundColor: Colors.white,
         centerTitle: true,
@@ -111,6 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+
       body: ListView.builder(
         itemCount: _produtos.length,
         itemBuilder: (ctx, index) {
@@ -129,27 +156,34 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.white,
                 ),
               ),
+
               title: Text(
                 prod.nome,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
+
               subtitle: Text(
                 'R\$ ${prod.preco.toStringAsFixed(2)}',
               ),
+
               trailing: const Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
               ),
-              onTap: () => _abrirDetalhes(
-                context,
-                prod,
-              ),
+
+              onTap: () {
+                _abrirDetalhes(
+                  context,
+                  prod,
+                );
+              },
             ),
           );
         },
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: _abrirCadastro,
         backgroundColor: Colors.indigo,

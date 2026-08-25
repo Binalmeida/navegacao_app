@@ -10,7 +10,8 @@ class AddProductScreen extends StatefulWidget {
 
 class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController _nomeController = TextEditingController();
-  final TextEditingController _descricaoController = TextEditingController();
+  final TextEditingController _descricaoController =
+      TextEditingController();
   final TextEditingController _precoController = TextEditingController();
 
   @override
@@ -24,9 +25,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
   void _cadastrarProduto() {
     final nome = _nomeController.text.trim();
     final descricao = _descricaoController.text.trim();
-    final precoTexto = _precoController.text.trim().replaceAll(',', '.');
+    final precoTexto =
+        _precoController.text.trim().replaceAll(',', '.');
 
-    if (nome.isEmpty || descricao.isEmpty || precoTexto.isEmpty) {
+    if (nome.isEmpty ||
+        descricao.isEmpty ||
+        precoTexto.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Preencha todos os campos.'),
@@ -115,7 +119,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.indigo,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                  ),
                 ),
               ),
             ),
